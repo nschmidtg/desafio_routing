@@ -18,7 +18,7 @@ Modificaciones a la base de datos original:
 * Se agregó un costo de almacenamiento de la ruta, que depende de la load_sum.
 * Se separó el load_type para que fuera un modelo aparte y optimizar las búsquedas.
 
-![alt text](https://github.com/nschmidtg/desafio_routing/blob/master/erd.pdf)
+![Imagen del modelo de datos](https://github.com/nschmidtg/desafio_routing/blob/master/erd.pdf)
 
 Consideraciones:
 * Dado que el enunciado no hacia alusión a la función objetivo a optimizar, me puse en el lugar de un cliente. Lo más probable es que quisiera optimizar este servicio no para que sea más fácil de asignar, sino también para ahorrarse costos. Me pregunté cuáles podrían ser esos posibles costos y asumí que pueden existir costos para el cliente por demanda insatisfecha, es decir, rutas no asignadas en caso de no satisfacer la demanda, además esta mercancía debe ser almacenada en alguna parte, lo que aumenta los costos del cliente y el supuesto fue hacer un costo por unidad de load.
