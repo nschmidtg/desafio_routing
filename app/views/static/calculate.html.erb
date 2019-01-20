@@ -1,0 +1,47 @@
+<%= @solution %> <br>
+Mejor de <%= @valid_solutions %> soluciones válidas calculadas en <%=@while_count%> ciclos
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">ID Vehículo</th>
+      <th scope="col">ID Conductor</th>
+      <th scope="col">ID Ruta</th>
+      <th scope="col">Hora Inicio</th>
+      <th scope="col">Hora fin</th>
+      <th scope="col">Costo</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    <%@solution.each_with_index do |row,i|%>
+        <% if i == @solution.count-1 %>
+        <%break%>
+        <%end%>
+        <tr>
+        <td><%=row[0]%></td>
+        <td><%=row[1]%></td>
+        <td><%=row[2]%></td>
+        <%route=Route.find(row[2])%>
+        <%driver = row[1] != 0 ? Driver.find(row[1]) : nil%>
+        <%vehicle = row[0] != 0 ? Vehicle.find(row[0]) : nil%>
+        <%route.driver=driver%>
+        <%route.vehicle=vehicle%>
+        <%vehicle.driver=driver if !vehicle.nil? %>
+        <%route.save%>
+        <%vehicle.save if !vehicle.nil? %>
+        <td><%=route.starts_at%></td>
+        <td><%=route.ends_at%></td>
+        <td><%=route.get_cost%></td>
+        </tr>
+    <%end%>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td><b><%=@solution.last.first%></td>
+    </tr>
+  </tbody>
+</table>

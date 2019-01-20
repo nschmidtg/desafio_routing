@@ -1,0 +1,74 @@
+class StaticController < ApplicationController
+    def home
+    end
+
+    def calculate
+        #Cambiar fecha a evaluar rutas
+        model_day = "24/01/2019".to_date
+        start = Time.now
+
+        routes = Route.where(starts_at: model_day.beginning_of_day..model_day.end_of_day)
+        drivers = Driver.all 
+        vehicles = Vehicle.all
+        matrixes = Array.new
+        if routes.count != 0 && vehicles.count != 0 && drivers.count != 0
+            #Cambiar tiempo en segundos durante el cual se buscarán soluciones
+            while (Time.now.to_i - start.to_i) < 5
+                #Avoid heroku timeout
+                matrix = Array.new
+                                
+                total_cost=0
+                routes.each do |route|
+                    if rand(0..1) == 1
+                        #This route is going to be in the possible solution
+                        load_type_vehicles = vehicles.where(load_type_id: route.load_type_id)
+                        route.vehicle = load_type_vehicles[rand(0..load_type_vehicles.count-1)]
+                        route.driver = route.vehicle.owner.present? ? route.vehicle.owner : drivers[rand(0..drivers.count-1)]
+                        route.save
+                        cost = route.get_cost
+                        if cost.nil?
+                            total_cost=nil
+
+                            break
+                        else
+                        matrix << [route.vehicle.id,route.driver.id,route.id,cost]
+                        end
+                        total_cost+=cost
+                    else
+                        cost = route.get_cost
+                        matrix << [0,0,route.id,cost]
+                        if cost.nil?
+                            total_cost=nil
+                            break
+                        end
+                        total_cost+=cost
+                    end
+                    
+                end
+                if total_cost != nil
+                    matrix << [total_cost,0,0,0]
+                    matrixes << matrix
+                end
+                routes.each do |route|
+                    route.vehicle=nil
+                    route.driver=nil
+                    route.save
+                end
+            end
+            min_cost=nil
+            best_matrix_index = nil
+            matrixes.each_with_index do |matrix,i|
+                current_cost = matrix.last[0]
+                if min_cost == nil
+                min_cost = current_cost
+                best_matrix_index = i
+                elsif current_cost < min_cost
+                min_cost = current_cost
+                best_matrix_index = i
+                end
+            end
+            @solution = matrixes[best_matrix_index]
+            @valid_solutions = matrixes.count
+        end
+    end
+end

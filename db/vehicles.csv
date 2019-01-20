@@ -1,0 +1,4 @@
+id,capacity,owner_id,load_type_id,usage_cost_per_commune
+1,10,,1,20
+2,8,1,2,30
+3,7,,1,40
