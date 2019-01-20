@@ -29,15 +29,16 @@ def carga_csv_with_communes(modelo, archivo, llaves)
 
       objeto.assign_attributes(row_hashs)
       objeto.communes << Commune.where(codigo: communes.split("/"))
-      errores=objeto.save
+      errores=objeto.save(validate: false)
       puts errores
     end
   end
 end
 LoadType.create([{id: 1, name: "General"},{id: 2, name: "Refrigerada"}])
-carga_csv_with_communes Route, 'routes.csv', %w[id]
+
 carga_csv_with_communes Driver, 'drivers.csv', %w[id]
 carga_csv Vehicle, 'vehicles.csv', %w[id]
+carga_csv_with_communes Route, 'routes.csv', %w[id]
 
 
 
