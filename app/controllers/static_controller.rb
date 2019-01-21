@@ -25,7 +25,7 @@ class StaticController < ApplicationController
         matrixes = Array.new
         if routes.count != 0 && vehicles.count != 0 && drivers.count != 0
             #Cambiar tiempo en segundos durante el cual se buscarán soluciones
-            while ((Time.now.to_i - start.to_i) < 5)
+            while ((Time.now.to_i - start.to_i) < 10)
                 #Avoid heroku timeout
                 @while_count+=1
                 clean_relationships!
